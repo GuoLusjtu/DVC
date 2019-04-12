@@ -7,6 +7,54 @@ DVC: An End-to-end Deep Video Compression Framework, Guo Lu, Wanli Ouyang, Dong 
 ![ ](Overview.png)
 
 
+
+## Test
+
+#### Pretrain models
+
+We provide the test code of our DVC framework. In our imolementation, we use the learning based image compression algorithm  (Variational image compression with a scale hyperprior, ICLR'18) as the intra coompression. 
+Specifically, for the video codec model wuth `lambda=k`, the image codec model with `lambda=4k` is used as the intra frames.
+Both the pre-train models of video codec and image codecs in our framework are available at [Dropbox](https://www.dropbox.com/s/9gc18ylms0rf9jl/PretrainModel.zip?dl=0). 
+
+#### Entropy Coding
+
+Currently, we do not provide the entropy coding module. The generated features from image/video codecs are saved to `.pkl` files. We give the estimated Bpp for these features. It is straightforward to compress these features by using traditional entroy coding tools, such as CABAC or Ranger Codec.
+
+#### Image Compression
+
+```
+cd ./TestDemo/ImageCodec
+```
+
+Image Encoding,
+
+```
+python Encoder.py --EncoderModel /path/to/encoder/model/.pb --input_frame /path/to/image/x.png  --output /output/feature/folder/
+```
+
+Image Decoding,
+
+```
+python Decoder.py --DecoderModel /path/to/decoder/model/.pb   --loadpath  /load/feature/folder/
+```
+
+#### Video Compression
+
+```
+cd ./TestDemo/VideoCodec
+```
+
+Video Encoding,
+```
+python  Encoder.py --EncoderModel /path/to/encoder/model/.pb  --input_frame /path/to/currentframe/im002.png --refer_frame  /path/to/previousframe/im001.png  	--output /output/feature/folder/
+```
+Video Decoding,
+
+```
+python Decoder.py --DecoderModel /path/to/decoder/model/.pb  --refer_frame /path/to/previous/im001.png --loadpath  /path/to/feature/folder/
+```
+
+
 ### Experimental Results
 
 Evaluation results on the UVG dataset and HEVC Class B (1080p) and Class E (720p). Please refer our paper for more experimental results.
