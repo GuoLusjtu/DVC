@@ -52,12 +52,12 @@ cd ./TestDemo/VideoCodec
 
 Video Encoding,
 ```
-python  Encoder.py --EncoderModel /path/to/encoder/model/.pb  --input_frame /path/to/currentframe/im002.png --refer_frame  /path/to/previousframe/im001.png  	--output /output/feature/folder/
+python  Encoder.py --EncoderModel /path/to/encoder/model/frozen_model_E.pb  --input_frame /path/to/currentframe/im002.png --refer_frame  /path/to/previousframe/im001.png  	--output /output/feature/folder/
 ```
 Video Decoding,
 
 ```
-python Decoder.py --DecoderModel /path/to/decoder/model/.pb  --refer_frame /path/to/previous/im001.png --loadpath  /path/to/feature/folder/
+python Decoder.py --DecoderModel /path/to/decoder/model/frozen_model_D.pb  --refer_frame /path/to/previous/im001.png --loadpath  /path/to/feature/folder/
 ```
 
 
