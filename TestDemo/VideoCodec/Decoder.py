@@ -3,6 +3,13 @@ import tensorflow as tf
 from scipy.misc import imread
 import numpy as np
 from argparse import ArgumentParser
+import math
+
+def CalcuPSNR(target, ref):
+    diff = ref - target
+    diff = diff.flatten('C')
+    rmse = math.sqrt(np.mean(diff**2.))
+    return 20 * math.log10(1.0 / (rmse))
 
 
 def load_graph(frozen_graph_filename):
@@ -18,7 +25,7 @@ def load_graph(frozen_graph_filename):
 def decoder(loadmodel, refer_path, outputfolder):
     graph = load_graph(loadmodel)
 
-    reconframe = graph.get_tensor_by_name('import/build_towers/tower_0/DVC_Model/train_net/ReconFrame:0')
+    reconframe = graph.get_tensor_by_name('import/build_towers/tower_0/train_net_inference_one_pass/train_net/ReconFrame:0')
     res_input = graph.get_tensor_by_name('import/quant_feature:0')
     res_prior_input = graph.get_tensor_by_name('import/quant_z:0')
     motion_input = graph.get_tensor_by_name('import/quant_mv:0')
@@ -39,6 +46,7 @@ def decoder(loadmodel, refer_path, outputfolder):
         im1 = im1 / 255.0
         im1 = np.expand_dims(im1, axis=0)
 
+        # reconstructed image
         recon_d = sess.run(
             [reconframe],
             feed_dict={
@@ -49,13 +57,19 @@ def decoder(loadmodel, refer_path, outputfolder):
             })
 
         # print(recon_d)
-
+        
+        # check 
+        # imagedir = './image/'
+        # im2 = imread(imagedir + 'im003.png')
+        # im2 = im2 / 255.0
+        # im2 = np.expand_dims(im2, axis=0)
+        # print(CalcuPSNR(im2, recon_d))
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument('--DecoderModel', type=str, dest="loadmodel", default='./model.pb', help="decoder model")
-    parser.add_argument('--refer_frame', type=str, dest="refer_path", default='./im001.png', help="refer image path")
-    parser.add_argument('--loadpath', type=str, dest="outputfolder", default='pkl', help="saved pkl file")
+    parser.add_argument('--DecoderModel', type=str, dest="loadmodel", default='./model/L2048/frozen_model_E.pb', help="decoder model")
+    parser.add_argument('--refer_frame', type=str, dest="refer_path", default='./image/im001.png', help="refer image path")
+    parser.add_argument('--loadpath', type=str, dest="outputfolder", default='./testpkl/', help="saved pkl file")
 
     args = parser.parse_args()
     decoder(**vars(args))
