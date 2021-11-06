@@ -8,6 +8,8 @@ DVC: An End-to-end Deep Video Compression Framework, Guo Lu, Wanli Ouyang, Dong 
 
 
 ## Update
+Please check the [PyTorch reimplmentation](https://github.com/ZhihaoHu/PyTorchVideoCompression) from my colleague.
+
 2020-04-07: I upload the 4 pre-train models with different lambda values and you can use different lambda for rate control.
 
 ## Test
